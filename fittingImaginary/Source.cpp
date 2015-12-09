@@ -221,6 +221,7 @@ int main(){
 
         ofs.close();
 
+        //À•”‚Ì‚İ‚ÅU‚é
         for (int j = 0; j <= EN_real; j++){
             for (int k = 0; k <= EN_imag; k++){
                 for (int l = 0; l < N; l++){
