@@ -266,7 +266,31 @@ int main(){
                 imag[i][j][k] *= exp(-i2E(E_BEGIN_imag, j, dE_imag) * T_END) / T_END;
             }
         }
-    } 
+    }
+
+    vector<vector<double>> res_imag(peakNum, vector<double>(EN_imag + 1));
+    for (int i = 0; i < peakNum; i++){
+        for (int j = 0; j <= EN_imag; j++){
+            res_imag[i][j] = simpson(imag[i][j]);
+        }
+    }
+
+    ofs.open("./output/imaginary.txt");
+    if (!ofs){
+        cerr << "file open error!" << endl;
+        exit(1);
+    }
+
+
+
+    ofs << scientific;
+    for (int i = 0; i <= EN_imag; i++){
+        ofs << i2E(dE_imag, i, dE_imag) << "\t";
+        for (int j = 0; j < peakNum; j++){
+            ofs << res_imag[j][i] << "\t";
+        }
+        ofs << endl;
+    }
 
     fftw_destroy_plan(plan_for);
     fftw_destroy_plan(plan_back);
