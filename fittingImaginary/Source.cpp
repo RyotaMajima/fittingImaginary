@@ -45,8 +45,8 @@ const double E_BEGIN_real = -1.2, E_END_real = 0.0;
 const int EN_real = 500;
 const double dE_real = (E_END_real - E_BEGIN_real) / EN_real;
 
-const double E_BEGIN_imag = -0.5, E_END_imag = 0.5;
-const int EN_imag = 100;
+const double E_BEGIN_imag = 0.0, E_END_imag = 0.2;
+const int EN_imag = 200;
 const double dE_imag = (E_END_imag - E_BEGIN_imag) / EN_imag;
 
 double i2x(int i){
@@ -236,12 +236,37 @@ int main(){
 
     ofs.close();
 
-    vector<pair<double, int>> peak; //ピーク値と実部・虚部のインデックスを格納するtuple
+    vector<pair<double, int>> peak;
 
     getPeaks(peak, res); //固有値のピークの探索
 
     int peakNum = peak.size();
- 
+
+    init(f);
+
+    vvvC imag(peakNum, vvC(EN_imag + 1, vC(N)));
+
+    for (int i = 0; i <= TN; i++){
+        //虚部のみで振る
+        for (int j = 0; j < peakNum; j++){
+            for (int k = 0; k <= EN_imag; k++){
+                for (int l = 0; l < N; l++){
+                    imag[j][k][l] += f[l] * polar(dt, i2E(E_BEGIN_real, peak[j].second, dE_real) * (i * dt)) * exp(i2E(E_BEGIN_imag, k, dE_imag) * (i * dt));
+                }
+            }
+        }
+
+        //時間発展
+        timeEvolution(f, plan_for, plan_back);
+    }
+
+    for (int i = 0; i < peakNum; i++){
+        for (int j = 0; j < EN_imag; j++){
+            for (int k = 0; k < N; k++){
+                imag[i][j][k] *= exp(-i2E(E_BEGIN_imag, j, dE_imag) * T_END) / T_END;
+            }
+        }
+    } 
 
     fftw_destroy_plan(plan_for);
     fftw_destroy_plan(plan_back);
