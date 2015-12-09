@@ -32,7 +32,7 @@ const double L = X_END - X_BEGIN; //‹óŠÔ•
 const int N = 256; //‹óŠÔ•ªŠ„”
 const double DELTA_X = L / N;
 
-const double T_END = 10; //I—¹
+const double T_END = 50; //I—¹
 const int TN = T_END * 2; //ŠÔ•ªŠ„”
 const double dt = T_END / TN; //ŠÔ‚İ•
 
