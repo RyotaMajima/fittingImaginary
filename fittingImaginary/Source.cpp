@@ -129,63 +129,44 @@ void timeEvolution(vC &f, fftw_plan plan_for, fftw_plan plan_back){
 }
 
 //複素エネルギーピークのインデックスを求める関数
-void getComplexPeaks(vector<tuple<double, int, int>> &peak, vector<vector<double>> &res){
+void getPeaks(vector<pair<double, int>> &peak, vector<double> &res){
     //微分値が正から負に変わったところの値とインデックス
     for (int i = 1; i < EN_real; i++){
-        for (int j = 1; j < EN_imag; j++){
-            if (res[i - 1][j] < res[i][j] && res[i][j] > res[i + 1][j] && res[i][j - 1] < res[i][j] && res[i][j] > res[i][j + 1]){
-                peak.push_back(make_tuple(res[i][j], i, j));
-            }
+        if (res[i - 1] < res[i] && res[i] > res[i + 1]){
+            peak.push_back(make_pair(res[i], i));
         }
     }
 
     //ピーク値の大きい順にソート
-    sort(peak.begin(), peak.end(), [](const tuple<double, int, int> &i, const tuple<double, int, int> &j){ return get<0>(i) > get<0>(j); });
+    sort(peak.begin(), peak.end(), [](const pair<double, int> &i, const pair<double, int> &j){ return i.first > j.first; });
     if (peak.empty()){
         cout << "no peak" << endl;
         exit(1);
     }
     else{
-        double E_th = get<0>(peak[0]) / 10; //しきい値
+        double E_th = peak[0].first / 10; //しきい値
         //しきい値以下の要素を削除
-        peak.erase(remove_if(peak.begin(), peak.end(), [E_th](tuple<double, int, int> tuple) {return get<0>(tuple) < E_th; }), peak.end());
+        peak.erase(remove_if(peak.begin(), peak.end(), [E_th](pair<double, int> pair) {return pair.first < E_th; }), peak.end());
 
         //実部の小さい順にソート
-        sort(peak.begin(), peak.end(), [](const tuple<double, int, int> &i, const tuple<double, int, int> &j){ return get<1>(i) < get<1>(j); });
+        sort(peak.begin(), peak.end(), [](const pair<double, int> &i, const pair<double, int> &j){ return i.second < j.second; });
 
         //得られたピーク値を表示
-        cout << "---- complex ver. ----" << endl << endl;
+        cout << "---- real ver. ----" << endl << endl;
 
         cout << "threshold value : " << E_th << endl << endl;
-        cout << "Re" << "\t" << "Im" << "\t" << "peak value" << endl;
-        for (auto tuple : peak){
-            double Re = i2E(E_BEGIN_real, get<1>(tuple), dE_real);
-            double Im = i2E(E_BEGIN_imag, get<2>(tuple), dE_imag);
-            printf("%.3lf\t%.3lf\t%.3lf\n", Re, Im, get<0>(tuple));
+        cout << "Re" << "\t" << "peak value" << endl;
+        for (auto pair : peak){
+            double Re = i2E(E_BEGIN_real, pair.second, dE_real);
+            printf("%.3lf\t%.3lf\n", Re, pair.first);
         }
-    }
-}
-
-//固有状態の抽出
-void getComplexEigenfunction(vC &phi, vC &f, fftw_plan plan_for, fftw_plan plan_back, double energy_real, double energy_imag){
-    for (int i = 0; i <= TN; i++){
-        //積分計算
-        for (int j = 0; j < N; j++){
-            phi[j] += f[j] * polar(dt, energy_real * (i * dt)) * exp(-energy_imag * (i * dt));
-        }
-
-        timeEvolution(f, plan_for, plan_back);
-    }
-
-    for (auto &val : phi){
-        val *= exp(-fabs(energy_imag) * T_END) / T_END;
     }
 }
 
 int main(){
     auto start = system_clock::now();
     vC f(N);
-    vvvC C(EN_real + 1, vvC(EN_imag + 1, vC(N)));
+    vvC C(EN_real + 1, vC(N));
 
     //順方向Fourier変換
     fftw_plan plan_for = fftw_plan_dft_1d(N, fftwcast(f.data()), fftwcast(f.data()), FFTW_FORWARD, FFTW_MEASURE);
@@ -223,10 +204,8 @@ int main(){
 
         //実部のみで振る
         for (int j = 0; j <= EN_real; j++){
-            for (int k = 0; k <= EN_imag; k++){
-                for (int l = 0; l < N; l++){
-                    C[j][k][l] += f[l] * polar(dt, i2E(E_BEGIN_real, j, dE_real) * (i * dt)) * exp(-i2E(E_BEGIN_imag, k, dE_imag) * (i * dt));
-                }
+            for (int k = 0; k < N; k++){
+                C[j][k] += f[k] * polar(dt, -i2E(E_BEGIN_real, j, dE_real) * (i * dt));
             }
         }
 
@@ -235,96 +214,34 @@ int main(){
     }
 
     for (int i = 0; i <= EN_real; i++){
-        for (int j = 0; j <= EN_imag; j++){
-            for (int k = 0; k < N; k++){
-                C[i][j][k] *= exp(-fabs(i2E(E_BEGIN_imag, j, dE_imag)) * T_END) / T_END;
-            }
+        for (int j = 0; j < N; j++){
+            C[i][j] /= T_END;
         }
     }
 
-    string str = "./output/energy_complex_T_" + to_string((int)T_END) + ".txt";
+    string str = "./output/energy_T_" + to_string((int)T_END) + ".txt";
     ofs.open(str);
     if (!ofs){
         cerr << "file open error!" << endl;
         exit(1);
     }
 
-    vector<vector<double>> res_complex(EN_real + 1, vector<double>(EN_imag + 1));
+    vector<double> res(EN_real + 1);
     ofs << scientific;
     for (int i = 0; i <= EN_real; i++){
-        for (int j = 0; j <= EN_imag; j++){
-            res_complex[i][j] = simpson(C[i][j]);
+            res[i] = simpson(C[i]);
             ofs << i2E(E_BEGIN_real, i, dE_real) << "\t";
-            ofs << i2E(E_BEGIN_imag, j, dE_imag) << "\t";
-            ofs << res_complex[i][j] << endl;
-        }
-        ofs << endl;
-    }
-
-    ofs.close();;
-
-    vector<tuple<double, int, int>> peak_complex; //ピーク値と実部・虚部のインデックスを格納するtuple
-
-    getComplexPeaks(peak_complex, res_complex); //固有値のピークの探索
-
-    int peakNum = peak_complex.size();
-    vvC phi(peakNum, vC(N)); //固有状態格納用配列
-
-    //固有状態の抽出
-    for (int i = 0; i < peakNum; i++){
-        init(f);
-        getComplexEigenfunction(phi[i], f, plan_for, plan_back, i2E(E_BEGIN_real, get<1>(peak_complex[i]), dE_real), i2E(E_BEGIN_imag, get<2>(peak_complex[i]), dE_imag));
-    }
-
-    //比較のため調和振動子の解を出力
-    vector<vector<double>> ho(2, vector<double>(N));
-    for (int i = 0; i < N; i++){
-        double x = i2x(i);
-        ho[0][i] = norm(groundState(x, 0.0));
-        ho[1][i] = norm(firstExcited(x, 0.0));
-    }
-
-    ofs.open("./output/harmonic.txt");
-    if (!ofs){
-        cerr << "file open error!" << endl;
-        exit(1);
-    }
-
-    for (int i = 0; i < N; i++){
-        ofs << i2x(i) << "\t";
-        for (int j = 0; j < 2; j++){
-            ofs << ho[j][i] << "\t";
-        }
-        ofs << endl;
+            ofs << res[i] << endl;
     }
 
     ofs.close();
 
-    //再規格化
-    for (int i = 0; i < peakNum; i++){
-        double sNorm = simpson(phi[i]);
-        for (int j = 0; j < N; j++){
-            phi[i][j] = norm(phi[i][j]) / sNorm;
-        }
-    }
+    vector<pair<double, int>> peak; //ピーク値と実部・虚部のインデックスを格納するtuple
 
-    str = "./output/phi_" + to_string((int)T_END) + ".txt";
-    ofs.open(str);
-    if (!ofs){
-        cerr << "file open error!" << endl;
-        exit(1);
-    }
+    getPeaks(peak, res); //固有値のピークの探索
 
-    //ファイル書き込み
-    for (int i = 0; i < N; i++){
-        ofs << i2x(i) << "\t" << V(i2x(i)) << "\t";
-        for (int j = 0; j < peakNum; j++) {
-            ofs << real(phi[j][i]) << "\t";
-        }
-        ofs << endl;
-    }
-
-    ofs.close();
+    int peakNum = peak.size();
+ 
 
     fftw_destroy_plan(plan_for);
     fftw_destroy_plan(plan_back);
