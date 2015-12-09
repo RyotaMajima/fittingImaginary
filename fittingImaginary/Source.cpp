@@ -32,8 +32,8 @@ const double L = X_END - X_BEGIN; //空間幅
 const int N = 256; //空間分割数
 const double DELTA_X = L / N;
 
-const double T_END = 50; //終了時刻
-const int TN = T_END * 2; //時間分割数
+const double T_END = 100; //終了時刻
+const int TN = T_END * 10; //時間分割数
 const double dt = T_END / TN; //時間刻み幅
 
 const double S = 0.9; //波束の幅
@@ -42,7 +42,7 @@ const double X_OPT = 4.0; //光学ポテンシャルをかける位置
 const double b = 1.0 / 3.0; //3次ポテンシャルの係数
 
 const double E_BEGIN_real = -1.2, E_END_real = 0.0;
-const int EN_real = 100;
+const int EN_real = 500;
 const double dE_real = (E_END_real - E_BEGIN_real) / EN_real;
 
 const double E_BEGIN_imag = -0.5, E_END_imag = 0.5;
@@ -205,7 +205,7 @@ int main(){
         //実部のみで振る
         for (int j = 0; j <= EN_real; j++){
             for (int k = 0; k < N; k++){
-                C[j][k] += f[k] * polar(dt, -i2E(E_BEGIN_real, j, dE_real) * (i * dt));
+                C[j][k] += f[k] * polar(dt, i2E(E_BEGIN_real, j, dE_real) * (i * dt));
             }
         }
 
