@@ -32,7 +32,7 @@ const double L = X_END - X_BEGIN; //‹óŠÔ•
 const int N = 512; //‹óŠÔ•ªŠ„”
 const double DELTA_X = L / N;
 
-const double T_END = 100; //I—¹
+const double T_END = 10; //I—¹
 const int TN = T_END * 10; //ŠÔ•ªŠ„”
 const double dt = T_END / TN; //ŠÔ‚İ•
 
@@ -45,8 +45,8 @@ const double E_BEGIN_real = -1.2, E_END_real = 0.0;
 const int EN_real = 500;
 const double dE_real = (E_END_real - E_BEGIN_real) / EN_real;
 
-const double E_BEGIN_imag = 0.0, E_END_imag = 0.04;
-const int EN_imag = 200;
+const double E_BEGIN_imag = 0.0, E_END_imag = 0.1;
+const int EN_imag = 500;
 const double dE_imag = (E_END_imag - E_BEGIN_imag) / EN_imag;
 
 double i2x(int i){
