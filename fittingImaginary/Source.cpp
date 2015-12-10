@@ -29,7 +29,7 @@ inline fftw_complex* fftwcast(Complex* f){ return reinterpret_cast<fftw_complex*
 
 const double X_BEGIN = -5.0, X_END = 25.0; //Œn‚Ì—¼’[
 const double L = X_END - X_BEGIN; //‹óŠÔ•
-const int N = 256; //‹óŠÔ•ªŠ„”
+const int N = 512; //‹óŠÔ•ªŠ„”
 const double DELTA_X = L / N;
 
 const double T_END = 100; //I—¹
@@ -45,7 +45,7 @@ const double E_BEGIN_real = -1.2, E_END_real = 0.0;
 const int EN_real = 500;
 const double dE_real = (E_END_real - E_BEGIN_real) / EN_real;
 
-const double E_BEGIN_imag = 0.0, E_END_imag = 0.2;
+const double E_BEGIN_imag = 0.0, E_END_imag = 0.04;
 const int EN_imag = 200;
 const double dE_imag = (E_END_imag - E_BEGIN_imag) / EN_imag;
 
@@ -166,7 +166,7 @@ void getPeaks(vector<pair<double, int>> &peak, vector<double> &res){
 int main(){
     auto start = system_clock::now();
     vC f(N);
-    vvC C(EN_real + 1, vC(N));
+    vvC C(EN_real, vC(N));
 
     //‡•ûŒüFourier•ÏŠ·
     fftw_plan plan_for = fftw_plan_dft_1d(N, fftwcast(f.data()), fftwcast(f.data()), FFTW_FORWARD, FFTW_MEASURE);
@@ -203,7 +203,7 @@ int main(){
         ofs.close();
 
         //À•”‚Ì‚İ‚ÅU‚é
-        for (int j = 0; j <= EN_real; j++){
+        for (int j = 0; j < EN_real; j++){
             for (int k = 0; k < N; k++){
                 C[j][k] += f[k] * polar(dt, i2E(E_BEGIN_real, j, dE_real) * (i * dt));
             }
@@ -213,7 +213,7 @@ int main(){
         timeEvolution(f, plan_for, plan_back);
     }
 
-    for (int i = 0; i <= EN_real; i++){
+    for (int i = 0; i < EN_real; i++){
         for (int j = 0; j < N; j++){
             C[i][j] /= T_END;
         }
@@ -226,9 +226,9 @@ int main(){
         exit(1);
     }
 
-    vector<double> res(EN_real + 1);
+    vector<double> res(EN_real);
     ofs << scientific;
-    for (int i = 0; i <= EN_real; i++){
+    for (int i = 0; i < EN_real; i++){
             res[i] = simpson(C[i]);
             ofs << i2E(E_BEGIN_real, i, dE_real) << "\t";
             ofs << res[i] << endl;
@@ -244,11 +244,11 @@ int main(){
 
     init(f);
 
-    vvvC imag(EN_imag + 1, vvC(peakNum, vC(N)));
+    vvvC imag(EN_imag, vvC(peakNum, vC(N)));
 
     for (int i = 0; i <= TN; i++){
         //‹••”‚Ì‚İ‚ÅU‚é
-        for (int j = 0; j <= EN_imag; j++){
+        for (int j = 0; j < EN_imag; j++){
             for (int k = 0; k < peakNum; k++){
                 for (int l = 0; l < N; l++){
                     imag[j][k][l] += f[l] * polar(dt, i2E(E_BEGIN_real, peak[k].second, dE_real) * (i * dt)) * exp(i2E(E_BEGIN_imag, j, dE_imag) * (i * dt));
@@ -260,7 +260,7 @@ int main(){
         timeEvolution(f, plan_for, plan_back);
     }
 
-    for (int i = 0; i <= EN_imag; i++){
+    for (int i = 0; i < EN_imag; i++){
         for (int j = 0; j < peakNum; j++){
             for (int k = 0; k < N; k++){
                 imag[i][j][k] *= exp(-i2E(E_BEGIN_imag, i, dE_imag) * T_END) / T_END;
@@ -268,8 +268,8 @@ int main(){
         }
     }
 
-    vector<vector<double>> res_imag(EN_imag + 1, vector<double>(peakNum));
-    for (int i = 0; i <= EN_imag; i++){
+    vector<vector<double>> res_imag(EN_imag, vector<double>(peakNum));
+    for (int i = 0; i < EN_imag; i++){
         for (int j = 0; j < peakNum; j++){
             res_imag[i][j] = simpson(imag[i][j]);
         }
@@ -282,7 +282,7 @@ int main(){
     }
 
     ofs << scientific;
-    for (int i = 0; i <= EN_imag; i++){
+    for (int i = 0; i < EN_imag; i++){
         ofs << i2E(dE_imag, i, dE_imag) << "\t";
         for (int j = 0; j < peakNum; j++){
             ofs << res_imag[i][j] << "\t";
