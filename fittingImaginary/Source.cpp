@@ -240,18 +240,18 @@ int main(){
 
     getPeaks(peak, res); //固有値のピークの探索
 
-    int peakNum = peak.size();
+    int peakNum = peak.size(); //得られたピーク数
 
     init(f);
 
-    vvvC imag(peakNum, vvC(EN_imag + 1, vC(N)));
+    vvvC imag(EN_imag + 1, vvC(peakNum, vC(N)));
 
     for (int i = 0; i <= TN; i++){
         //虚部のみで振る
-        for (int j = 0; j < peakNum; j++){
-            for (int k = 0; k <= EN_imag; k++){
+        for (int j = 0; j <= EN_imag; j++){
+            for (int k = 0; k < peakNum; k++){
                 for (int l = 0; l < N; l++){
-                    imag[j][k][l] += f[l] * polar(dt, i2E(E_BEGIN_real, peak[j].second, dE_real) * (i * dt)) * exp(i2E(E_BEGIN_imag, k, dE_imag) * (i * dt));
+                    imag[j][k][l] += f[l] * polar(dt, i2E(E_BEGIN_real, peak[k].second, dE_real) * (i * dt)) * exp(i2E(E_BEGIN_imag, j, dE_imag) * (i * dt));
                 }
             }
         }
@@ -260,17 +260,17 @@ int main(){
         timeEvolution(f, plan_for, plan_back);
     }
 
-    for (int i = 0; i < peakNum; i++){
-        for (int j = 0; j < EN_imag; j++){
+    for (int i = 0; i <= EN_imag; i++){
+        for (int j = 0; j < peakNum; j++){
             for (int k = 0; k < N; k++){
-                imag[i][j][k] *= exp(-i2E(E_BEGIN_imag, j, dE_imag) * T_END) / T_END;
+                imag[i][j][k] *= exp(-i2E(E_BEGIN_imag, i, dE_imag) * T_END) / T_END;
             }
         }
     }
 
-    vector<vector<double>> res_imag(peakNum, vector<double>(EN_imag + 1));
-    for (int i = 0; i < peakNum; i++){
-        for (int j = 0; j <= EN_imag; j++){
+    vector<vector<double>> res_imag(EN_imag + 1, vector<double>(peakNum));
+    for (int i = 0; i <= EN_imag; i++){
+        for (int j = 0; j < peakNum; j++){
             res_imag[i][j] = simpson(imag[i][j]);
         }
     }
@@ -281,13 +281,11 @@ int main(){
         exit(1);
     }
 
-
-
     ofs << scientific;
     for (int i = 0; i <= EN_imag; i++){
         ofs << i2E(dE_imag, i, dE_imag) << "\t";
         for (int j = 0; j < peakNum; j++){
-            ofs << res_imag[j][i] << "\t";
+            ofs << res_imag[i][j] << "\t";
         }
         ofs << endl;
     }
