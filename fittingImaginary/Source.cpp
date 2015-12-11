@@ -299,6 +299,7 @@ int main(){
 
     fprintf(fp, "T = %.0f\n", T_END);
     fprintf(fp, "N = %d\n", N);
+    fprintf(fp, "peakNum = %d\n", peakNum);
 
     for (int i = 0; i < peakNum; i++){
         fprintf(fp, "E%d = %lf\n", i, i2E(E_BEGIN_real, peak[i].second, dE_real));
