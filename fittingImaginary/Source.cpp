@@ -72,7 +72,7 @@ double secondExcited(double x, double X){
 //初期化用関数の定義
 void init(vC &f){
     for (int i = 0; i < N; i++){
-        f[i] = groundState(i2x(i), X);
+        f[i] = firstExcited(i2x(i), X);
     }
 }
 
@@ -289,6 +289,22 @@ int main(){
         }
         ofs << endl;
     }
+
+    //パラメータと結果のファイル書き込み(gnuplot用)
+    FILE *fp = fopen("params.txt", "w");
+    if (fp == NULL){
+        cerr << "file open error!" << endl;
+        exit(1);
+    }
+
+    fprintf(fp, "T = %.0f\n", T_END);
+    fprintf(fp, "N = %d\n", N);
+
+    for (int i = 0; i < peakNum; i++){
+        fprintf(fp, "E%d = %lf\n", i, i2E(E_BEGIN_real, peak[i].second, dE_real));
+    }
+
+    fclose(fp);
 
     fftw_destroy_plan(plan_for);
     fftw_destroy_plan(plan_back);

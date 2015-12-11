@@ -3,15 +3,17 @@ unset multiplot; reset
 set ter tikz size 21cm,29.7cm font ",12" standalone
 #set output "./graph/imag.pdf"
 set output "./graph/imag.tex"
-set multiplot layout 2,1 titl "Fitting curve ($T = 50$)" font ",15"
+load "params.txt"
+set multiplot layout 2,1 \
+ title sprintf("Fitting curve ($T = %.0f$)", T) font ",15"
 
 set xlab "$\\varepsilon^{I}$"
-T = 300
+
 
 a = 1e-2; b = 1e-7
 f(x) = a * ((exp((x - b) * T) - 1)/((x - b) * T))**2 * exp(-2 * x * T)
 
-fit f(x) "" us 1:2 via a,b
+fit f(x) "./output/imaginary.txt" us 1:2 via a,b
 
 #b = 0.000226
 
