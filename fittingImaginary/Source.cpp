@@ -29,11 +29,11 @@ inline fftw_complex* fftwcast(Complex* f){ return reinterpret_cast<fftw_complex*
 
 const double X_BEGIN = -5.0, X_END = 25.0; //Œn‚Ì—¼’[
 const double L = X_END - X_BEGIN; //‹óŠÔ•
-const int N = 1024; //‹óŠÔ•ªŠ„”
+const int N = 512; //‹óŠÔ•ªŠ„”
 const double DELTA_X = L / N;
 
 const double T_END = 50; //I—¹Žž
-const int TN = T_END * 10; //ŽžŠÔ•ªŠ„”
+const int TN = T_END * 100; //ŽžŠÔ•ªŠ„”
 const double dt = T_END / TN; //ŽžŠÔ‚Ý•
 
 const double S = 0.9; //”g‘©‚Ì•
@@ -177,8 +177,8 @@ int main(){
     printf("---- calculation parameters ----\n");
     printf("system size : \t [%.1f, %.1f]\n", X_BEGIN, X_END);
     printf("partition number : N = %d\n", N);
-    printf("calculation time : T = %.0f\n", T_END);
-    printf("time step : dt = %.1f\n", dt);
+    printf("calculation time : T = %.1f\n", T_END);
+    printf("time step : dt = %.2f\n", dt);
     printf("energy width (real) : [%.2f, %.2f] N = %d\n", E_BEGIN_real, E_END_real, EN_real);
     printf("energy width (imag) : [%.2f, %.2f] N = %d\n", E_BEGIN_imag, E_END_imag, EN_imag);
     printf("--------------------------------\n");
@@ -315,7 +315,8 @@ int main(){
     auto sec = duration_cast<seconds>(dur).count();
     auto min = duration_cast<minutes>(dur).count();
 
-    printf("\nexecution time : %dsec (%dmin)\n\n", sec, min);
+    cout << endl;
+    cout << "execution time : " << sec << "sec " << "(" << min << "min)" << endl;
 
     return 0;
 }
