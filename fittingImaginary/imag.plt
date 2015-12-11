@@ -22,10 +22,10 @@ set label 1 sprintf("$E_{1}^{I}$ = %f", b) right at graph 0.9,0.8
 pl f(x) ti "", "" us 1:2 ti ""
 
 a = 1e-2; b = 1e-8
-#fit [0:0.1] f(x) "" us 1:3 via a,b
+fit [0:0.1] f(x) "" us 1:3 via a,b
 
 set title "first excited state ($E_{1}^{R} = -0.158$)"
-#set label 1 sprintf("$E_{2}^{I}$ = %f", b) right at graph 0.9,0.8
+set label 1 sprintf("$E_{2}^{I}$ = %f", b) right at graph 0.9,0.8
 pl f(x) ti "", "" us 1:3 ti ""
 unset multiplot
 set output
