@@ -32,7 +32,7 @@ const double L = X_END - X_BEGIN; //‹óŠÔ•
 const int N = 512; //‹óŠÔ•ªŠ„”
 const double DELTA_X = L / N;
 
-const double T_END = 200; //I—¹
+const double T_END = 50; //I—¹
 const int TN = T_END * 10; //ŠÔ•ªŠ„”
 const double dt = T_END / TN; //ŠÔ‚İ•
 
@@ -45,8 +45,8 @@ const double E_BEGIN_real = -1.2, E_END_real = 0.0;
 const int EN_real = 500;
 const double dE_real = (E_END_real - E_BEGIN_real) / EN_real;
 
-const double E_BEGIN_imag = 0.0, E_END_imag = 0.05;
-const int EN_imag = 500;
+const double E_BEGIN_imag = 0.0, E_END_imag = 0.1;
+const int EN_imag = 400;
 const double dE_imag = (E_END_imag - E_BEGIN_imag) / EN_imag;
 
 double i2x(int i){
@@ -283,7 +283,7 @@ int main(){
 
     ofs << scientific;
     for (int i = 0; i < EN_imag; i++){
-        ofs << i2E(dE_imag, i, dE_imag) << "\t";
+        ofs << i2E(E_BEGIN_imag, i, dE_imag) << "\t";
         for (int j = 0; j < peakNum; j++){
             ofs << res_imag[i][j] << "\t";
         }
