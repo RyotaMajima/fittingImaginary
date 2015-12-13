@@ -19,6 +19,8 @@ set title "ground state $E_{0}^{R} = -1.020$"
 set label 1 sprintf("$E_{0}^{I}$ = %.3e", b) right at graph 0.9,0.8
 pl f(x) ti "fitting curve", "" us 1:2 ti "data"
 
+save vari sprintf("fit_T_%d.var", T)
+
 a = 1e-2; b = 1e-4
 fit f(x) "./output/imaginary.txt" us 1:3 via a,b
 set title "first excited state $E_{1}^{R} = -0.158$"
