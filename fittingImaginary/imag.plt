@@ -23,14 +23,14 @@ set print "./output/fit_result/ground.txt" append
 print T,b
 
 if(peakNum == 2){
-a = 1e-2; b = 1e-4
-fit f(x) "./output/imaginary.txt" us 1:3 via a,b
-set title "first excited state $E_{1}^{R} = -0.158$"
-set label 1 sprintf("$E_{1}^{I}$ = %.3e", b) right at graph 0.9,0.8
-pl f(x) ti "fitting curve", "" us 1:3 ti "data"
+	a = 1e-2; b = 1e-4
+	fit f(x) "./output/imaginary.txt" us 1:3 via a,b
+	set title "first excited state $E_{1}^{R} = -0.158$"
+	set label 1 sprintf("$E_{1}^{I}$ = %.3e", b) right at graph 0.9,0.8
+	pl f(x) ti "fitting curve", "" us 1:3 ti "data"
 
-set print "./output/fit_result/first.txt" append
-print T,b
+	set print "./output/fit_result/first.txt" append
+	print T,b
 }
 
 unset multiplot
