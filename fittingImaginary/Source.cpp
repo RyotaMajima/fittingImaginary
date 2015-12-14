@@ -41,8 +41,8 @@ const double X = -0.5; //初期波束の原点からのずれ
 const double X_OPT = 4.0; //光学ポテンシャルをかける位置
 const double b = 1.0 / 2.5; //3次ポテンシャルの係数
 
-const double E_BEGIN_real = -1.2, E_END_real = 0.0;
-const int EN_real = 200;
+const double E_BEGIN_real = -1.2, E_END_real = 0.5;
+const int EN_real = 400;
 const double dE_real = (E_END_real - E_BEGIN_real) / EN_real;
 
 const double E_BEGIN_imag = 0.0, E_END_imag = 0.1;
@@ -144,7 +144,7 @@ void getPeaks(vector<pair<double, int>> &peak, vector<double> &res){
         exit(1);
     }
     else{
-        double E_th = peak[0].first / 10; //しきい値
+        double E_th = peak[0].first / 20; //しきい値
         //しきい値以下の要素を削除
         peak.erase(remove_if(peak.begin(), peak.end(), [E_th](pair<double, int> pair) {return pair.first < E_th; }), peak.end());
 
