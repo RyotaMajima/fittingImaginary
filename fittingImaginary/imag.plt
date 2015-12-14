@@ -22,7 +22,7 @@ pl f(x) ti "fitting curve", "" us 1:2 ti "data"
 set print "./output/fit_result/ground.txt" append
 print T,b
 
-if(peakNum == 2){
+if(peakNum > 1){
 	a = 1e-2; b = 1e-4
 	fit f(x) "./output/imaginary.txt" us 1:3 via a,b
 	set title "first excited state $E_{1}^{R} = -0.158$"
