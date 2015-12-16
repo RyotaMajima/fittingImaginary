@@ -186,21 +186,21 @@ int main(){
     init(f); //‰ŠúğŒf(x,0)‚Ìİ’è
 
     ofstream ofs;
-    char filename[50];
+    //char filename[50];
 
     for (int i = 0; i <= TN; i++){
-        sprintf(filename, "./output/timeEvo/output%03d.txt", i);
-        ofs.open(filename);
-        if (!ofs){
-            cerr << "file open error!" << endl;
-            exit(1);
-        }
+        //sprintf(filename, "./output/timeEvo/output%03d.txt", i);
+        //ofs.open(filename);
+        //if (!ofs){
+        //    cerr << "file open error!" << endl;
+        //    exit(1);
+        //}
 
-        for (int j = 0; j < N; j++){
-            ofs << i2x(j) << "\t" << norm(f[j]) << "\t" << V(i2x(j)) << endl;
-        }
+        //for (int j = 0; j < N; j++){
+        //    ofs << i2x(j) << "\t" << norm(f[j]) << "\t" << V(i2x(j)) << endl;
+        //}
 
-        ofs.close();
+        //ofs.close();
 
         //À•”‚Ì‚İ‚ÅU‚é
         for (int j = 0; j < EN_real; j++){
