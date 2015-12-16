@@ -1,6 +1,6 @@
 unset multiplot; reset
-set ter tikz standalone size 15cm,10cm font ",6"
-set output "C:/Users/sigmajima/Dropbox/TeX/thesis/interim/slide/graph_slide/imag.tex"
+#set ter tikz standalone size 15cm,10cm font ",6"
+#set output "C:/Users/sigmajima/Dropbox/TeX/thesis/interim/slide/graph_slide/imag.tex"
 load "params.txt"
 set multiplot layout 1,2
 
@@ -17,7 +17,7 @@ set label 1 sprintf("$E_{0}^{I}$ = %.3e", b) right at graph 0.9,0.8
 pl f(x) ti "fitting curve", "" us 1:2 ti "data"
 
 set print "./output/fit_result/ground.txt" append
-#print T,b
+print T,b
 
 if(peakNum > 1){
 	a = 1e-2; b = 1e-4
@@ -27,7 +27,7 @@ if(peakNum > 1){
 	pl f(x) ti "fitting curve", "" us 1:3 ti "data"
 
 	set print "./output/fit_result/first.txt" append
-	#print T,b
+	print T,b
 }
 
 unset multiplot
