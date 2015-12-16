@@ -32,7 +32,7 @@ const double L = X_END - X_BEGIN; //空間幅
 const int N = 512; //空間分割数
 const double DELTA_X = L / N;
 
-const double T_END = 100; //終了時刻
+const double T_END = 50; //終了時刻
 const int TN = T_END * 100; //時間分割数
 const double dt = T_END / TN; //時間刻み幅
 
@@ -72,7 +72,7 @@ double secondExcited(double x, double X){
 //初期化用関数の定義
 void init(vC &f){
     for (int i = 0; i < N; i++){
-        f[i] = groundState(i2x(i), X);
+        f[i] = firstExcited(i2x(i), X);
     }
 }
 

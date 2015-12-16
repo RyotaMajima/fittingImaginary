@@ -1,14 +1,11 @@
 unset multiplot; reset
-#set ter pdfcairo size 21cm,29.7cm font ",15"
-set ter tikz size 21cm,29.7cm font ",12" standalone
-#set output "./graph/imag.pdf"
-set output "./graph/imag.tex"
+set ter tikz standalone size 15cm,10cm font ",6"
+set output "C:/Users/sigmajima/Dropbox/TeX/thesis/interim/slide/graph_slide/imag.tex"
 load "params.txt"
-set multiplot layout 2,1 \
- title sprintf("Fitting curve ($T = %.0f$)", T) font ",15"
+set multiplot layout 1,2
 
 set xlab "$\\varepsilon^{I}$"
-set key box
+set ylab "$|| \\Phi_{T}(\\varepsilon^{I}) ||^{2}$" offset -2,0
 set key spacing 1.3
 
 f(x) = a * ((exp((x - b) * T) - 1)/((x - b) * T))**2 * exp(-2 * x * T)
