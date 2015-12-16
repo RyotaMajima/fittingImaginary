@@ -1,8 +1,8 @@
 unset multiplot; reset
 
-#set ter tikz standalone font ",8"
-#set output \
-# "C:/Users/sigmajima/Dropbox/TeX/thesis/interim/slide/graph_slide/fit_result_3.tex"
+set ter tikz standalone font ",8"
+set output \
+ "C:/Users/sigmajima/Dropbox/TeX/thesis/interim/slide/graph_slide/fit_result_3.tex"
 
 load "params.txt"
 set multiplot layout 2,1
