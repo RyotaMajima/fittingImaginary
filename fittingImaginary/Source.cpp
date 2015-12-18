@@ -42,7 +42,7 @@ const double X_OPT = 4.0; //光学ポテンシャルをかける位置
 const double b = 1.0 / 3.0; //3次ポテンシャルの係数
 
 const double E_BEGIN_real = -1.5, E_END_real = 0.5;
-const int EN_real = 500;
+const int EN_real = 1000;
 const double dE_real = (E_END_real - E_BEGIN_real) / EN_real;
 
 const double E_BEGIN_imag = 0.0, E_END_imag = 0.03;
