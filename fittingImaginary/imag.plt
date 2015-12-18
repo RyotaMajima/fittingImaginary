@@ -4,7 +4,7 @@ set output "C:/Users/sigmajima/Dropbox/TeX/thesis/interim/slide/graph_slide/imag
 load "params.txt"
 set multiplot layout 1,2
 
-set xlab "$\\varepsilon^{I}$"
+set xlab "$\\varepsilon^{I} / \\hbar \\omega$"
 set ylab "$|| \\Phi_{T}(\\varepsilon^{I}) ||^{2}$" offset -2,0
 set key spacing 1.3
 
